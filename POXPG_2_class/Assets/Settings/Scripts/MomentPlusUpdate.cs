@@ -11,16 +11,20 @@ public class PlayerControllerUpdate : MonoBehaviour
     private bool jumpPressed;
     private int jumpCount;
     public int maxJumps = 2;
+    private bool IsRunning;
+    private bool IsSprinting;
     
-
+    public Animator anim;
     public Rigidbody2D rb;
     public SpriteRenderer spriteRenderer;
     public GroundChecker groundChecker;
+    
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
         jumpCount = 0;
         
     }
@@ -29,7 +33,8 @@ public class PlayerControllerUpdate : MonoBehaviour
     {
         
         moveInput = Input.GetAxis("Horizontal");
-
+        
+        IsSprinting = Input.GetKey(KeyCode.LeftShift);
         //flip
         if(moveInput < -0.01f)
         {
@@ -46,14 +51,41 @@ public class PlayerControllerUpdate : MonoBehaviour
         {
             jumpPressed = true;
         }
+
+        if(moveInput != 0)
+        {
+            anim.SetBool("IsRunning", true);
+
+        }
+        else
+        {
+            anim.SetBool("IsRunning", false);
+        }
+        
+        anim.SetBool("IsJumping", !groundChecker.isGrounded);
+
+        anim.SetBool("IsSprinting", moveInput != 0 && IsSprinting);
+
+
+        
+        
+        
+        
+
+        
+
+        
     }
 
     void FixedUpdate()
     {
+        
+
         if (groundChecker.isGrounded)
         {
             jumpCount = 0;
         }
+
         
         
 
@@ -72,6 +104,7 @@ public class PlayerControllerUpdate : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftShift))
         {
             rb.velocity = new Vector2(moveInput * runSpeed, rb.velocity.y);
+            
         }
 
         else
