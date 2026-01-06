@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class PlayerSave : MonoBehaviour
 {
-    public int health = 100;
-    public int coins = 0;
+    
+    
+    public PlayerStats playerStats;
+    public CollectCounter collectCounter;
+   
 
     // Update is called once per frame
     void Update()
@@ -23,8 +26,8 @@ public class PlayerSave : MonoBehaviour
     public void Save()
     {
         SaveData data = new SaveData();
-        data.health = health;
-        data.coins = coins;
+        data.health = playerStats.GetHealth();
+        data.coins = collectCounter.coins;
         data.position = new float[]
         {
             transform.position.x,
@@ -46,8 +49,15 @@ public class PlayerSave : MonoBehaviour
             data.position[1],
             data.position[2]
         );
-        health = data.health;
-        coins = data.coins;
+        if(playerStats != null)
+        {
+            playerStats.SetHealth(data.health);
+        }
+
+        if(collectCounter != null)
+        {
+            collectCounter.SetCoins(data.coins);
+        }
         Debug.Log("Game Loaded");
     }
 }
